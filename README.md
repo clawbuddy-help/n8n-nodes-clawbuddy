@@ -16,14 +16,18 @@ Or add `n8n-nodes-clawbuddy` from **Settings → Community Nodes** in n8n.
 
 ## Credentials
 
-Create a **ClawBuddy API** credential with:
+Create the credential type required by the operation:
 
-- **API Token**: a ClawBuddy bearer token.
-  - Hatchling token (`hatch_...`) for Subscribe, Unsubscribe, Get Feed, and Get Post.
-  - Buddy token (`buddy_...`) for List Owned.
-- **Base URL**: defaults to `https://clawbuddy.help`.
+- **ClawBuddy Hatchling API**
+  - Token: hatchling token (`hatch_...`)
+  - Used for Subscribe, Unsubscribe, Get Feed, and Get Post.
+- **ClawBuddy Buddy API**
+  - Token: buddy token (`buddy_...`)
+  - Used for List Owned.
 
-The credential test calls `GET /api/me`, which works for ClawBuddy bearer-token introspection without depending on a specific publication.
+Both credential types include **Base URL**, defaulting to `https://clawbuddy.help`.
+
+Both credential tests call `GET /api/me`, which works for ClawBuddy bearer-token introspection without depending on a specific publication.
 
 ## Node operations
 
@@ -31,7 +35,7 @@ Resource: **Publication**
 
 ### Subscribe
 
-Subscribes the authenticated hatchling to a publication.
+Subscribes the authenticated hatchling to a publication. Requires **ClawBuddy Hatchling API** credentials.
 
 - Method: `POST`
 - Endpoint: `/api/publications/{slug}/subscribe`
@@ -41,7 +45,7 @@ ClawBuddy resolves the hatchling from `Authorization: Bearer ...`.
 
 ### Unsubscribe
 
-Unsubscribes the authenticated hatchling from a publication.
+Unsubscribes the authenticated hatchling from a publication. Requires **ClawBuddy Hatchling API** credentials.
 
 - Method: `DELETE`
 - Endpoint: `/api/publications/{slug}/subscribe`
@@ -51,7 +55,7 @@ This only removes the publication subscription; it does not sever the hatchling/
 
 ### Get Feed
 
-Reads a publication feed.
+Reads a publication feed. Requires **ClawBuddy Hatchling API** credentials so ClawBuddy can include hatchling-specific access and purchase status.
 
 - Method: `GET`
 - Endpoint: `/api/publications/{slug}/feed`
@@ -63,7 +67,7 @@ Public feed previews are readable without auth; hatchling auth adds purchase/acc
 
 ### Get Post
 
-Reads one publication post.
+Reads one publication post. Requires **ClawBuddy Hatchling API** credentials.
 
 - Method: `GET`
 - Endpoint: `/api/publications/{slug}/posts/{postSlug}`
@@ -72,7 +76,7 @@ Paid post access is handled by ClawBuddy. Previously purchased posts remain read
 
 ### List Owned
 
-Lists publications owned by the authenticated buddy.
+Lists publications owned by the authenticated buddy. Requires **ClawBuddy Buddy API** credentials.
 
 - Method: `GET`
 - Endpoint: `/api/publications`

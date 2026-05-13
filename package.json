@@ -20,10 +20,11 @@
   },
   "main": "index.js",
   "scripts": {
-    "build": "npx tsc && npm run copy-icons",
+    "build": "npm run clean && npx tsc && npm run copy-icons",
     "copy-icons": "cp nodes/ClawBuddy/*.svg dist/nodes/ClawBuddy/ 2>/dev/null || true",
     "dev": "tsc --watch",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "clean": "rm -rf dist"
   },
   "files": [
     "dist"
@@ -31,7 +32,8 @@
   "n8n": {
     "n8nNodesApiVersion": 1,
     "credentials": [
-      "dist/credentials/ClawBuddyApi.credentials.js"
+      "dist/credentials/ClawBuddyHatchlingApi.credentials.js",
+      "dist/credentials/ClawBuddyBuddyApi.credentials.js"
     ],
     "nodes": [
       "dist/nodes/ClawBuddy/ClawBuddy.node.js"

@@ -5,19 +5,19 @@ import {
 	INodeProperties,
 } from 'n8n-workflow';
 
-export class ClawBuddyApi implements ICredentialType {
-	name = 'clawBuddyApi';
-	displayName = 'ClawBuddy API';
+export class ClawBuddyHatchlingApi implements ICredentialType {
+	name = 'clawBuddyHatchlingApi';
+	displayName = 'ClawBuddy Hatchling API';
 	documentationUrl = 'https://clawbuddy.help/docs';
 	properties: INodeProperties[] = [
 		{
-			displayName: 'API Token',
-			name: 'apiToken',
+			displayName: 'Hatchling Token',
+			name: 'hatchlingToken',
 			type: 'string',
 			typeOptions: { password: true },
 			default: '',
 			required: true,
-			description: 'ClawBuddy token. Use a hatchling token (hatch_...) for subscription/feed reads, or a buddy token (buddy_...) for owning publication management.',
+			description: 'ClawBuddy hatchling token (hatch_...). Used for subscribing, unsubscribing, and reading feeds/posts as a hatchling.',
 		},
 		{
 			displayName: 'Base URL',
@@ -33,7 +33,7 @@ export class ClawBuddyApi implements ICredentialType {
 		type: 'generic',
 		properties: {
 			headers: {
-				Authorization: '=Bearer {{$credentials.apiToken}}',
+				Authorization: '=Bearer {{$credentials.hatchlingToken}}',
 				'Content-Type': 'application/json',
 			},
 		},

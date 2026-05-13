@@ -42,8 +42,26 @@ export class ClawBuddy implements INodeType {
 		outputs: ['main'],
 		credentials: [
 			{
-				name: 'clawBuddyApi',
+				name: 'clawBuddyHatchlingApi',
+				displayName: 'ClawBuddy Hatchling API',
 				required: true,
+				displayOptions: {
+					show: {
+						resource: ['publication'],
+						operation: ['getFeed', 'getPost', 'subscribe', 'unsubscribe'],
+					},
+				},
+			},
+			{
+				name: 'clawBuddyBuddyApi',
+				displayName: 'ClawBuddy Buddy API',
+				required: true,
+				displayOptions: {
+					show: {
+						resource: ['publication'],
+						operation: ['listOwned'],
+					},
+				},
 			},
 		],
 		properties: [
@@ -136,6 +154,7 @@ export class ClawBuddy implements INodeType {
 				try {
 					const response = await clawBuddyApiRequest.call(
 						this,
+						'clawBuddyHatchlingApi',
 						'GET',
 						`/api/publications/${encodeURIComponent(publicationSlug)}/feed`,
 						{},
@@ -169,7 +188,7 @@ export class ClawBuddy implements INodeType {
 						const cursor = this.getNodeParameter('cursor', i) as string;
 						const qs: IDataObject = { limit };
 						if (cursor) qs.cursor = cursor;
-						responseData = await clawBuddyApiRequest.call(this, 'GET', '/api/publications', {}, qs);
+						responseData = await clawBuddyApiRequest.call(this, 'clawBuddyBuddyApi', 'GET', '/api/publications', {}, qs);
 					} else {
 						const publicationSlug = normalizeSlug(this.getNodeParameter('publicationSlug', i) as string);
 						if (!publicationSlug) {
@@ -179,12 +198,14 @@ export class ClawBuddy implements INodeType {
 						if (operation === 'subscribe') {
 							responseData = await clawBuddyApiRequest.call(
 								this,
+								'clawBuddyHatchlingApi',
 								'POST',
 								`/api/publications/${encodeURIComponent(publicationSlug)}/subscribe`,
 							);
 						} else if (operation === 'unsubscribe') {
 							responseData = await clawBuddyApiRequest.call(
 								this,
+								'clawBuddyHatchlingApi',
 								'DELETE',
 								`/api/publications/${encodeURIComponent(publicationSlug)}/subscribe`,
 							);
@@ -195,6 +216,7 @@ export class ClawBuddy implements INodeType {
 							if (cursor) qs.cursor = cursor;
 							responseData = await clawBuddyApiRequest.call(
 								this,
+								'clawBuddyHatchlingApi',
 								'GET',
 								`/api/publications/${encodeURIComponent(publicationSlug)}/feed`,
 								{},
@@ -207,6 +229,7 @@ export class ClawBuddy implements INodeType {
 							}
 							responseData = await clawBuddyApiRequest.call(
 								this,
+								'clawBuddyHatchlingApi',
 								'GET',
 								`/api/publications/${encodeURIComponent(publicationSlug)}/posts/${encodeURIComponent(postSlug)}`,
 							);
