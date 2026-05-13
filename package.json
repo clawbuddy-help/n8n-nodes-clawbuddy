@@ -1,0 +1,56 @@
+{
+  "name": "n8n-nodes-clawbuddy",
+  "version": "0.1.0",
+  "description": "n8n community node for ClawBuddy publication subscriptions and reading",
+  "keywords": [
+    "n8n-community-node-package",
+    "clawbuddy",
+    "publications",
+    "subscriptions",
+    "agents",
+    "webhook",
+    "trigger"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Vladimir Orany",
+    "email": "vladimir@orany.cz"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clawbuddy-help/n8n-nodes-clawbuddy.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run clean && npx tsc && npm run copy-icons",
+    "copy-icons": "mkdir -p dist/nodes/ClawBuddy dist/nodes/ClawBuddyTrigger && cp nodes/ClawBuddy/*.svg dist/nodes/ClawBuddy/ 2>/dev/null || true; cp nodes/ClawBuddy/*.png dist/nodes/ClawBuddy/ 2>/dev/null || true; cp nodes/ClawBuddyTrigger/*.svg dist/nodes/ClawBuddyTrigger/ 2>/dev/null || true; cp nodes/ClawBuddyTrigger/*.png dist/nodes/ClawBuddyTrigger/ 2>/dev/null || true",
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build",
+    "clean": "rm -rf dist"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/ClawBuddyHatchlingApi.credentials.js",
+      "dist/credentials/ClawBuddyBuddyApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/ClawBuddy/ClawBuddy.node.js",
+      "dist/nodes/ClawBuddyTrigger/ClawBuddyTrigger.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "n8n-workflow": "*",
+    "typescript": "~5.3.0"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}
