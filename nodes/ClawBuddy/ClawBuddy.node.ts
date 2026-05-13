@@ -10,10 +10,22 @@ import type {
 import { NodeOperationError } from 'n8n-workflow';
 import { clawBuddyApiRequest } from './GenericFunctions';
 
+type PublicBuddyOption = {
+	id?: string;
+	slug?: string;
+	name?: string;
+	owner_github_username?: string | null;
+	publication_count?: number;
+};
+
 type PublicationOption = {
 	slug?: string;
 	name?: string;
 	description?: string | null;
+	buddy?: {
+		slug?: string;
+		name?: string;
+	};
 };
 
 type FeedItem = {
@@ -93,16 +105,32 @@ export class ClawBuddy implements INodeType {
 				default: 'getFeed',
 			},
 			{
-				displayName: 'Publication Slug',
+				displayName: 'Buddy',
+				name: 'buddySlug',
+				type: 'options',
+				typeOptions: {
+					loadOptionsMethod: 'getPublicBuddies',
+				},
+				displayOptions: {
+					show: { resource: ['publication'], operation: ['getFeed', 'getPost', 'subscribe', 'unsubscribe'] },
+				},
+				default: '',
+				description: 'Public buddy whose publications should be shown',
+			},
+			{
+				displayName: 'Publication',
 				name: 'publicationSlug',
-				type: 'string',
+				type: 'options',
+				typeOptions: {
+					loadOptionsMethod: 'getPublicPublications',
+					loadOptionsDependsOn: ['buddySlug'],
+				},
 				required: true,
 				displayOptions: {
 					show: { resource: ['publication'], operation: ['getFeed', 'getPost', 'subscribe', 'unsubscribe'] },
 				},
 				default: '',
-				placeholder: 'openclaw-release-safe-watch',
-				description: 'The public ClawBuddy publication slug',
+				description: 'The public ClawBuddy publication. Publication slugs remain globally unique.',
 			},
 			{
 				displayName: 'Post Slug',
@@ -145,6 +173,54 @@ export class ClawBuddy implements INodeType {
 
 	methods = {
 		loadOptions: {
+			async getPublicBuddies(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				try {
+					const response = await clawBuddyApiRequest.call(
+						this,
+						'clawBuddyHatchlingApi',
+						'GET',
+						'/api/publications/discover',
+						{},
+						{ limit: 1 },
+					);
+					const buddies = (response.buddies || []) as PublicBuddyOption[];
+					return buddies.map((buddy) => ({
+						name: `${buddy.name || buddy.slug}${buddy.publication_count ? ` (${buddy.publication_count})` : ''}`,
+						value: buddy.slug || buddy.id || '',
+						description: buddy.owner_github_username ? `Owner: ${buddy.owner_github_username}` : undefined,
+					})).filter((option) => Boolean(option.value));
+				} catch {
+					return [];
+				}
+			},
+
+			async getPublicPublications(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				const buddySlug = normalizeSlug(String(this.getCurrentNodeParameter('buddySlug') || ''));
+				const qs: IDataObject = { limit: 100 };
+				if (buddySlug) {
+					qs.buddy = buddySlug;
+				}
+
+				try {
+					const response = await clawBuddyApiRequest.call(
+						this,
+						'clawBuddyHatchlingApi',
+						'GET',
+						'/api/publications/discover',
+						{},
+						qs,
+					);
+					const data = (response.data || []) as PublicationOption[];
+					return data.map((publication) => ({
+						name: `${publication.name || publication.slug}${publication.buddy?.name ? ` — ${publication.buddy.name}` : ''}`,
+						value: publication.slug || '',
+						description: publication.description || undefined,
+					})).filter((option) => Boolean(option.value));
+				} catch {
+					return [];
+				}
+			},
+
 			async getPosts(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
 				const publicationSlug = normalizeSlug(String(this.getCurrentNodeParameter('publicationSlug') || ''));
 				if (!publicationSlug) {

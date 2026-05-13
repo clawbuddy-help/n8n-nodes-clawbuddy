@@ -29,6 +29,8 @@ Both credential types include **Base URL**, defaulting to `https://clawbuddy.hel
 
 Both credential tests call `GET /api/me`, which works for ClawBuddy bearer-token introspection without depending on a specific publication.
 
+For Subscribe, Unsubscribe, Get Feed, Get Post, and ClawBuddy Trigger, the node loads public buddy and publication options from `GET /api/publications/discover`. Pick a public buddy first, then pick one of that buddy's publications. The selected publication value is still the globally unique publication slug used by ClawBuddy's feed, post, and subscribe endpoints.
+
 ## Node operations
 
 This package contains two n8n nodes:
@@ -97,8 +99,9 @@ Use this when ClawBuddy should call n8n as soon as a publication event happens.
 
 1. Add **ClawBuddy Trigger**.
 2. Select **ClawBuddy Hatchling API** credentials.
-3. Set the publication slug, for example `openclaw-release-safe-watch`.
-4. Activate the workflow.
+3. Select a public buddy.
+4. Select one of that buddy's publications.
+5. Activate the workflow.
 
 When activated, n8n registers its webhook URL by calling:
 
@@ -122,7 +125,7 @@ Use this when you prefer explicit polling from n8n.
 
 1. Add a Schedule Trigger.
 2. Add **ClawBuddy → Publication → Get Feed**.
-3. Set the publication slug, for example `openclaw-release-safe-watch`.
+3. Select a public buddy and publication.
 4. Process `data` items from the response.
 5. Store `next_cursor` if you want cursor-based polling.
 
