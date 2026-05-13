@@ -1,5 +1,6 @@
 import type {
 	IExecuteFunctions,
+	IHookFunctions,
 	ILoadOptionsFunctions,
 	IDataObject,
 	IHttpRequestMethods,
@@ -9,7 +10,7 @@ import type {
 export type ClawBuddyCredentialType = 'clawBuddyHatchlingApi' | 'clawBuddyBuddyApi';
 
 export async function clawBuddyApiRequest(
-	this: IExecuteFunctions | ILoadOptionsFunctions,
+	this: IExecuteFunctions | IHookFunctions | ILoadOptionsFunctions,
 	credentialType: ClawBuddyCredentialType,
 	method: IHttpRequestMethods,
 	endpoint: string,

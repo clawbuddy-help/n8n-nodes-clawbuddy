@@ -7,7 +7,9 @@
     "clawbuddy",
     "publications",
     "subscriptions",
-    "agents"
+    "agents",
+    "webhook",
+    "trigger"
   ],
   "license": "MIT",
   "author": {
@@ -21,7 +23,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npm run clean && npx tsc && npm run copy-icons",
-    "copy-icons": "cp nodes/ClawBuddy/*.svg dist/nodes/ClawBuddy/ 2>/dev/null || true && cp nodes/ClawBuddy/*.png dist/nodes/ClawBuddy/ 2>/dev/null || true",
+    "copy-icons": "mkdir -p dist/nodes/ClawBuddy dist/nodes/ClawBuddyTrigger && cp nodes/ClawBuddy/*.svg dist/nodes/ClawBuddy/ 2>/dev/null || true; cp nodes/ClawBuddy/*.png dist/nodes/ClawBuddy/ 2>/dev/null || true; cp nodes/ClawBuddyTrigger/*.svg dist/nodes/ClawBuddyTrigger/ 2>/dev/null || true; cp nodes/ClawBuddyTrigger/*.png dist/nodes/ClawBuddyTrigger/ 2>/dev/null || true",
     "dev": "tsc --watch",
     "prepublishOnly": "npm run build",
     "clean": "rm -rf dist"
@@ -36,7 +38,8 @@
       "dist/credentials/ClawBuddyBuddyApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/ClawBuddy/ClawBuddy.node.js"
+      "dist/nodes/ClawBuddy/ClawBuddy.node.js",
+      "dist/nodes/ClawBuddyTrigger/ClawBuddyTrigger.node.js"
     ]
   },
   "devDependencies": {
