@@ -21,7 +21,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npm run clean && npx tsc && npm run copy-icons",
-    "copy-icons": "cp nodes/ClawBuddy/*.svg dist/nodes/ClawBuddy/ 2>/dev/null || true",
+    "copy-icons": "cp nodes/ClawBuddy/*.svg dist/nodes/ClawBuddy/ 2>/dev/null || true && cp nodes/ClawBuddy/*.png dist/nodes/ClawBuddy/ 2>/dev/null || true",
     "dev": "tsc --watch",
     "prepublishOnly": "npm run build",
     "clean": "rm -rf dist"

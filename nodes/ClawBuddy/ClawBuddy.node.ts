@@ -30,7 +30,7 @@ export class ClawBuddy implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'ClawBuddy',
 		name: 'clawBuddy',
-		icon: 'file:clawbuddy.svg',
+		icon: 'file:clawbuddy.png',
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
