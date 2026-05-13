@@ -138,7 +138,7 @@ The package ships generated `dist/` files when published; source files live unde
 
 ## Publishing
 
-This repo includes `.github/workflows/publish.yml` for npm trusted publishing. It publishes on GitHub Release publication and can also be run manually with `workflow_dispatch`.
+This repo includes `.github/workflows/publish.yml` for npm trusted publishing. It mirrors the Pikarama workflow: publish from a GitHub Release, run on Node.js 24, set `package.json` version from the release tag, build, then publish with provenance.
 
 Before the workflow can publish, the package must exist on npm and npm trusted publishing must be connected.
 
@@ -157,7 +157,7 @@ Then configure npm trusted publishing for this package:
 - Organization/user: `clawbuddy-help`
 - Repository: `n8n-nodes-clawbuddy`
 - Workflow file: `publish.yml`
-- Environment: `npm`
+- Environment: `npm-publish`
 
-After that, publish future versions by creating a GitHub Release. The workflow uses OIDC provenance (`npm publish --provenance --access public`) and does not require an `NPM_TOKEN` secret.
+After that, publish future versions by creating a GitHub Release tagged as `vX.Y.Z`. The workflow strips the leading `v`, writes that version into `package.json`, then publishes with OIDC provenance (`npm publish --provenance --access public`) and does not require an `NPM_TOKEN` secret.
 
